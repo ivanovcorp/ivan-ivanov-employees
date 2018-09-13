@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>Home</title>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+<script>function read() {
+	var file = document.getElementById('file').files[0];
+	if (file) {
+		getAsText(file);
+	}
+}
+
+function getAsText(readFile) {
+	var reader = new FileReader();
+	reader.readAsText(readFile, "UTF-8");
+	reader.onload = loaded;
+}
+function loaded(evt) {
+	console.log("File Loaded Successfully");
+	var fileString = evt.target.result;
+	processFile(fileString)
+}
+
+function processFile(file) {
+	$.ajax({
+		type : "POST",
+		url : "http://localhost:9777/api/fileProcess",
+		data : JSON.stringify({
+			file : file
+		}),
+		success : function(data) {
+			$("#emp1").text(data.id1);
+			$("#emp2").text(data.id2);
+			$("#days").text(data.days);
+
+		},
+		error : function(jqXHR, textStatus, errorThrown) {
+			alert("Error, status = " + textStatus + ", " + "error thrown: "
+					+ errorThrown);
+		}
+	});
+}</script>
+<style type="text/css">
+#eployees {
+	font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+	border-collapse: collapse;
+	width: 100%;
+}
+
+#employees td, #employees th {
+	border: 1px solid #ddd;
+	padding: 8px;
+}
+
+#employees tr:nth-child(even) {
+	background-color: #f2f2f2;
+}
+
+#employees tr:hover {
+	background-color: #ddd;
+}
+
+#employees th {
+	padding-top: 12px;
+	padding-bottom: 12px;
+	text-align: left;
+	background-color: #4CAF50;
+	color: white;
+}
+
+#upl-btn {
+	padding: 15px;
+	margin: 15px;
+}
+</style>
+</head>
+
+<body>
+
+	<h1>Employees Web Application</h1>
+
+	<div>
+		<input type="file" id="file" name="files[]" onchange="read()"
+			class="upl-btn" />
+	</div>
+	<table id="employees">
+		<tbody>
+			<tr>
+				<th>Employee #1 ID</th>
+				<th>Employee #2 ID</th>
+				<th>Days worked as team</th>
+			</tr>
+			<tr>
+				<td id="emp1"></td>
+				<td id="emp2"></td>
+				<td id="days"></td>
+			</tr>
+		</tbody>
+	</table>
+</body>
+</html>

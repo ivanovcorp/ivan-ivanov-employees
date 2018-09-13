@@ -35,6 +35,13 @@ public class CalculatorImpl implements Calculator {
     sb.append("Days worked together: " + this.mostDays).append(System.lineSeparator());
     return sb.toString();
   }
+  
+  @Override
+  public String getJSONData() {
+     StringBuilder sb = new StringBuilder();
+     sb.append("{\"id1\":").append(this.ids[0]).append(", \"id2\":").append(this.ids[1]).append(", \"days\":").append(this.mostDays).append("}");
+     return sb.toString();
+  }
 
   @Override
   public void clearCalculations() {

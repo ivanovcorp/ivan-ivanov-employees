@@ -6,4 +6,6 @@ public interface Calculator {
     String printResult();
 
     void clearCalculations();
+    
+    String getJSONData();
 }
