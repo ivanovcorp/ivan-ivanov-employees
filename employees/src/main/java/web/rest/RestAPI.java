@@ -45,9 +45,7 @@ public class RestAPI extends AbstractVerticle {
       Router router = Router.router(vertx);
       Set<HttpMethod> allowedMethods = new LinkedHashSet<>(
               Arrays.asList(HttpMethod.PUT, HttpMethod.DELETE, HttpMethod.GET, HttpMethod.POST, HttpMethod.OPTIONS));
-      router.route().handler(CorsHandler.create("*").allowedMethods(allowedMethods));
-
-      router.get(GET_DATA).handler(this::getData);
+      router.route().handler(CorsHandler.create("*").allowedMethods(allowedMethods));      
       router.route(FILE_PROCESS).handler(BodyHandler.create());
       router.post(FILE_PROCESS).handler(this::processFile);
 
@@ -63,12 +61,7 @@ public class RestAPI extends AbstractVerticle {
   }
 
   private void processFile(RoutingContext routingContext) {      
-    System.out.println("Yes process.");
-    
     String dataProcessed = getDataString(routingContext);
-    JsonObject json = new JsonObject(dataProcessed);
-    
-    System.out.println();
     routingContext.response().putHeader("Content-Type", "application/json").end(dataProcessed);
   }
   
@@ -86,12 +79,4 @@ public class RestAPI extends AbstractVerticle {
     
     return this.calculator.getJSONData();
   }
-
-  private void getData(RoutingContext routingContext) {      
-    /*vertx.eventBus().send(PersistenceHandler.PERSISTENCE_SERVICE_ADDRESS_GET_ALL, "", reply -> {
-        routingContext.response().putHeader("content-type", "application/json; charset=utf-8")
-                .end(reply.result().body().toString());
-    });*/
-    System.out.println("Yes get all.");
-}  
 }
