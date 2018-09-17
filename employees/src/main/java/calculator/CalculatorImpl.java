@@ -5,6 +5,7 @@ import static java.time.temporal.ChronoUnit.DAYS;
 import entities.Employee;
 import entities.Storage;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Set;
 
 public class CalculatorImpl implements Calculator {
@@ -63,21 +64,28 @@ public class CalculatorImpl implements Calculator {
     Set<Integer> projectIds = emp1.getProjectsIds();
 
     for (Integer pid : projectIds) {
-      LocalDate startDateEmp1 = emp1.getDateFromByProjectId(pid);
-      LocalDate startDateEmp2 = emp2.getDateFromByProjectId(pid);
-
-      LocalDate endDateEmp1 = emp1.getDateToByProjectId(pid);
-      LocalDate endDateEmp2 = emp2.getDateToByProjectId(pid);
-
-      if (startDateEmp1 == null || startDateEmp2 == null ||
-          endDateEmp1== null || endDateEmp2 == null || endDateEmp1.isBefore(startDateEmp2) || endDateEmp2.isBefore(startDateEmp1) ||
-          startDateEmp1.isAfter(endDateEmp2) || startDateEmp2.isAfter(endDateEmp1)) {
+      if (!emp2.getProjectsIds().contains(pid)) {
         continue;
       }
 
-      LocalDate startDate = startDateEmp1.compareTo(startDateEmp2) > 0 ? startDateEmp1 : startDateEmp2;
-      LocalDate endDate = endDateEmp1.compareTo(endDateEmp2) < 0 ? endDateEmp1 : endDateEmp2;
-      daysWorkedTogeather += DAYS.between(startDate, endDate);
+      List<LocalDate> datesFromEmp1 = emp1.getDateFromByProjectId(pid);
+      for (int i = 0; i < emp1.getDateFromByProjectId(pid).size(); i++) {
+        LocalDate startDateEmp1 = emp1.getDateFromByProjectId(pid).get(i);
+        LocalDate endDateEmp1 = emp1.getDateToByProjectId(pid).get(i);
+          for (int j = 0; j < emp2.getDateFromByProjectId(pid).size(); j++) {
+            LocalDate startDateEmp2 = emp2.getDateFromByProjectId(pid).get(j);
+            LocalDate endDateEmp2 = emp2.getDateToByProjectId(pid).get(j);
+
+            if (startDateEmp1 == null || startDateEmp2 == null ||
+                endDateEmp1== null || endDateEmp2 == null || endDateEmp1.isBefore(startDateEmp2) || endDateEmp2.isBefore(startDateEmp1) ||
+                startDateEmp1.isAfter(endDateEmp2) || startDateEmp2.isAfter(endDateEmp1)) {
+              continue;
+            }
+            LocalDate startDate = startDateEmp1.compareTo(startDateEmp2) > 0 ? startDateEmp1 : startDateEmp2;
+            LocalDate endDate = endDateEmp1.compareTo(endDateEmp2) < 0 ? endDateEmp1 : endDateEmp2;
+            daysWorkedTogeather += DAYS.between(startDate, endDate);
+          }
+      }
     }
 
     if (daysWorkedTogeather > this.mostDays) {

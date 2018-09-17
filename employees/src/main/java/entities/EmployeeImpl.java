@@ -1,6 +1,7 @@
 package entities;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -13,9 +14,9 @@ public class EmployeeImpl implements Employee {
 
   private Set<Integer> projects;
 
-  private Map<Integer, LocalDate> fromDates;
+  private Map<Integer, List<LocalDate>> fromDates;
 
-  private Map<Integer, LocalDate> toDates;
+  private Map<Integer, List<LocalDate>> toDates;
 
   public EmployeeImpl(int id) {
     this.id = id;
@@ -30,12 +31,12 @@ public class EmployeeImpl implements Employee {
   }
 
   @Override
-  public LocalDate getDateFromByProjectId(int id) {
+  public List<LocalDate> getDateFromByProjectId(int id) {
     return this.fromDates.get(id);
   }
 
   @Override
-  public LocalDate getDateToByProjectId(int id) {
+  public List<LocalDate> getDateToByProjectId(int id) {
     return this.toDates.get(id);
   }
 
@@ -53,12 +54,21 @@ public class EmployeeImpl implements Employee {
 
   @Override
   public void linkDateFromByProjectId(int id, LocalDate fromDate) {
-    this.fromDates.put(id, fromDate);
+    List<LocalDate> list = this.fromDates.get(id);
+    if (list == null) {
+      list = new ArrayList<>();
+    }
+    list.add(fromDate);
+    this.fromDates.put(id, list);
   }
 
   @Override
   public void linkDateToByProjectId(int id, LocalDate toDate) {
-    this.toDates.put(id, toDate);
+    List<LocalDate> list = this.toDates.get(id);
+    if (list == null) {
+      list = new ArrayList<>();
+    }
+    list.add(toDate);
+    this.toDates.put(id, list);
   }
 }
-

@@ -8,9 +8,9 @@ public interface Employee {
 
   int getId();
 
-  LocalDate getDateFromByProjectId(int id);
+  List<LocalDate> getDateFromByProjectId(int id);
 
-  LocalDate getDateToByProjectId(int id);
+  List<LocalDate> getDateToByProjectId(int id);
 
   void linkProject(int id);
 
